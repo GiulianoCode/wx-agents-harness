@@ -72,6 +72,26 @@ momento justo.
   cómo verificar, decisiones/gotchas, y un **prompt de continuación pegable en Codex**.
 - Append de una línea por handoff a `progress/history.md`.
 
+## Cómo se escribe el handoff (no tipeás `/handoff`)
+
+El handoff es **automático guiado por el agente**, no un comando que el runtime
+dispara solo:
+
+1. El hook inyecta una **instrucción** en el contexto del agente ("estás en zona
+   danger/hard, dejá el handoff").
+2. El **agente** escribe/actualiza `progress/current.md` **él mismo** con sus tools.
+   (Los hooks no pueden invocar un slash command; `/handoff` es la misma rutina
+   disponible para uso manual, pero en el flujo normal no hace falta tipearla.)
+
+### Red de seguridad mecánica (auto-snapshot)
+Como (2) depende de que el agente obedezca, hay un respaldo **mecánico** que no
+depende de él: en zona danger/hard, `ratelimit-guard.sh` escribe por script
+`progress/auto-snapshot.md` (timestamp, % de 5h, feature activa, `git status`,
+`git diff --stat`, últimos commits). No tiene la riqueza del handoff del agente,
+pero garantiza que **siempre** quede una pista en disco aunque el corte sea brutal.
+Al reabrir, si no hay handoff abierto, `session-resume.sh` inyecta ese snapshot si
+es reciente (<6h). El archivo es transitorio y está en `.gitignore`.
+
 ## Codex (prioridad 2)
 
 Codex no tiene statusline que cachee el dato, así que su autochequeo es más manual:

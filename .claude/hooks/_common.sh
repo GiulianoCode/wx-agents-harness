@@ -40,9 +40,41 @@ nudge_text() {
     warn)
       printf '⚠ Rate limit de 5h al %s%%%s. Asegurate de que `progress/current.md` exista y refleje la tarea activa: es la base del handoff. Trabajá normal, pero mantené ese archivo vivo.' "$pct" "$reset_lbl" ;;
     danger)
-      printf '🟠 Rate limit de 5h al %s%% — ZONA DE PELIGRO%s. A partir de ahora: (1) trabajá en pasos chicos y atómicos, nada de refactors grandes; (2) DESPUÉS de cada paso atómico, refrescá el handoff con `/handoff` (o actualizando `progress/current.md`). El objetivo es que el handoff esté siempre completo en disco por si el límite corta de golpe.' "$pct" "$reset_lbl" ;;
+      printf '🟠 Rate limit de 5h al %s%% — ZONA DE PELIGRO%s. A partir de ahora: (1) trabajá en pasos chicos y atómicos, nada de refactors grandes; (2) DESPUÉS de cada paso atómico, escribí/actualizá vos mismo el archivo `progress/current.md` con estado + próximos pasos (es el handoff; hacelo directo con tus tools de edición, no esperes que nadie dispare un comando). El objetivo es que el handoff esté siempre completo en disco por si el límite corta de golpe.' "$pct" "$reset_lbl" ;;
     hard)
-      printf '🔴 Rate limit de 5h al %s%% — CRÍTICO%s. PARÁ acá: terminá SOLO el paso atómico actual, confirmá que `progress/current.md` esté completo (estado + próximos pasos + prompt de continuación para Codex con `/handoff`), avisale al usuario que pase a Codex con ese prompt, y NO empieces trabajo nuevo.' "$pct" "$reset_lbl" ;;
+      printf '🔴 Rate limit de 5h al %s%% — CRÍTICO%s. PARÁ acá: terminá SOLO el paso atómico actual y, vos mismo, dejá `progress/current.md` completo (estado + próximos pasos + un prompt de continuación para Codex). Escribí ese archivo directamente con tus tools; NO hace falta ningún comando. Avisale al usuario que pase a Codex con ese prompt y NO empieces trabajo nuevo.' "$pct" "$reset_lbl" ;;
     *) printf '' ;;
   esac
+}
+
+# Red de seguridad MECÁNICA: escribe un snapshot del estado a disco por script,
+# sin depender de que el agente obedezca el nudge. Complementa (no reemplaza) al
+# handoff rico que escribe el agente en progress/current.md.
+# args: <pct> <zone>
+write_snapshot() {
+  local out="$PROJECT_DIR/progress/auto-snapshot.md" pct="$1" zone="$2" active=""
+  mkdir -p "$PROJECT_DIR/progress" 2>/dev/null
+  if [ -f "$PROJECT_DIR/feature_list.json" ] && have jq; then
+    active=$(jq -r '(.active // ([.features[]? | select(.status=="in_progress") | .id] | first)) // "—"' \
+            "$PROJECT_DIR/feature_list.json" 2>/dev/null)
+  fi
+  {
+    echo "# AUTO-SNAPSHOT — respaldo mecánico (lo genera un hook; NO editar a mano)"
+    echo "generado: $(date '+%Y-%m-%d %H:%M:%S')"
+    echo "rate_limit_5h: ${pct}% (zona ${zone})"
+    echo "feature activa: ${active:-—}"
+    echo
+    echo "## git status (--short)"
+    git -C "$PROJECT_DIR" status --short 2>/dev/null | head -60
+    echo
+    echo "## cambios sin commitear (diff --stat)"
+    git -C "$PROJECT_DIR" diff --stat 2>/dev/null | head -60
+    echo
+    echo "## últimos commits"
+    git -C "$PROJECT_DIR" log --oneline -5 2>/dev/null
+    echo
+    echo "> Respaldo automático por cercanía al rate limit. El handoff REAL es"
+    echo "> progress/current.md (lo escribe el agente, con criterio). Leé ese primero;"
+    echo "> usá este snapshot solo si current.md no alcanzó a actualizarse."
+  } > "$out" 2>/dev/null
 }
