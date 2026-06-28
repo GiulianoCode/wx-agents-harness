@@ -18,17 +18,32 @@ adaptable a otros tipos vía onboarding guiado.
 
 ## Cómo usarlo
 
+### Proyecto nuevo
 1. **Cloná/copiá** este template a un proyecto nuevo.
 2. Abrí Claude Code en la carpeta y corré **`/onboard`**. Te entrevista (tipo de
    proyecto, stack, comando de tests, umbrales) y configura todo.
 3. Empezá a trabajar con el flujo SDD: `/spec <feature>` → aprobás → implementás →
    `/verify`.
 
+### Proyecto EXISTENTE (con código y git ya presentes)
+1. Desde el proyecto existente, corré el instalador apuntando a este template:
+   ```bash
+   bash /ruta/al/wx-harness-template/install.sh /ruta/a/mi-proyecto-existente
+   ```
+   Es **idempotente y no pisa nada**: copia la maquinaria del harness, **fusiona**
+   `.claude/settings.json` (hooks + permisos) y `.gitignore`, y deja como `*.harness`
+   los contratos que ya existan (`CLAUDE.md`/`AGENTS.md`) para no sobrescribirlos.
+2. Abrí Claude Code en el proyecto y **aprobá los hooks** cuando los pida.
+3. Corré **`/adopt`**: fusiona los contratos `*.harness` con criterio, detecta tu
+   stack y comando de tests reales, configura `.harness/config.json` y verifica con
+   `init.sh`.
+
 ## Comandos (Claude)
 
 | Comando | Qué hace |
 |---|---|
-| `/onboard` | Entrevista guiada que adapta el template al proyecto. |
+| `/onboard` | Entrevista guiada que adapta el template a un proyecto nuevo. |
+| `/adopt` | Integra el harness en un proyecto existente (fusiona contratos, detecta stack/tests). |
 | `/spec <feature>` | Crea la spec SDD (requirements/design/tasks). |
 | `/handoff` | Vuelca estado + prompt de continuación a `progress/current.md`. |
 | `/verify` | Corre `init.sh` y reporta. |
