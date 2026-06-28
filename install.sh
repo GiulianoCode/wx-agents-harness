@@ -2,7 +2,7 @@
 # install.sh — instala/actualiza el harness en un proyecto (nuevo o EXISTENTE).
 #
 # Uso:
-#   bash /ruta/al/wx-harness-template/install.sh <dir-del-proyecto>
+#   bash /ruta/al/wx-agents-harness/install.sh <dir-del-proyecto>
 #
 # Idempotente y merge-aware:
 #   - Maquinaria del harness (.claude/hooks|commands|agents|skills, .harness/bin|

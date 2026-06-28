@@ -3,7 +3,7 @@
 # proyecto actual (carpeta nueva o existente). install.sh decide el resto (no pisa nada).
 #
 # Uso (dentro de la carpeta del proyecto):
-#   curl -fsSL https://raw.githubusercontent.com/GiulianoCode/wx-harness-template/main/bootstrap.sh | bash
+#   curl -fsSL https://raw.githubusercontent.com/GiulianoCode/wx-agents-harness/main/bootstrap.sh | bash
 # o, si ya tenés el repo a mano:
 #   bash bootstrap.sh [dir-destino]
 #
@@ -11,7 +11,7 @@
 #   TEMPLATE_REPO  URL del template (default abajo). Override si forkeás/renombrás.
 set -euo pipefail
 
-REPO="${TEMPLATE_REPO:-https://github.com/GiulianoCode/wx-harness-template}"
+REPO="${TEMPLATE_REPO:-https://github.com/GiulianoCode/wx-agents-harness}"
 TGT="${1:-$PWD}"
 mkdir -p "$TGT"; TGT="$(cd "$TGT" && pwd)"
 
