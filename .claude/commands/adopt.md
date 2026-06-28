@@ -12,6 +12,28 @@ Estás incorporando el harness a un proyecto que **ya tiene código** (lo trajo
 - Identificá el tipo de proyecto → mapealo a un perfil (`saas-web`, `api-service`,
   `cli`, `library`). Si es web, recordá el aviso de agent-browser.
 
+## 1b. Migrá el estado de un harness PREVIO (si lo hay) — sin perder datos
+El installer reporta "Estado/harness PREVIO detectado" y **nunca pisa** esos datos.
+Tu trabajo es **migrarlos** a la estructura de este harness con criterio:
+
+- **Regla de oro: cero pérdida.** No borres nada hasta haber migrado y verificado.
+  Archivá los originales del harness viejo en `.harness/migrated/<fecha>/` (movelos
+  ahí) en vez de eliminarlos; dejá una nota en `progress/history.md`.
+- **`feature_list.json` previo**:
+  - Si ya tiene el esquema de este harness (`{active, features:[{id,title,status,
+    spec_dir,notes}]}`), **conservalo tal cual** (no lo reemplaces por el placeholder).
+  - Si viene de otro harness / otro esquema, **mapealo**: cada feature → un item con
+    `id` (kebab-case), `title`, `status` equivalente (pending/spec_ready/in_progress/
+    done) y `notes`. Preservá toda info que no encaje en un campo `notes`.
+- **specs / tasks previas**: mapealas a `specs/<id>/{requirements,design,tasks}.md`.
+  Si el harness viejo guardaba specs en otra carpeta/forma, traducí preservando contenido.
+- **progress / handoff / decisiones previas**: integralas en `progress/current.md`
+  (estado activo) e `progress/history.md` (log). Decisiones de arquitectura → `docs/`.
+- **Otros marcadores** (`.sdd/`, `tasks.md`, `harness.json`, etc.): leelos, migrá lo
+  útil, archivá el resto en `.harness/migrated/`.
+- Mostrale al usuario un **resumen de la migración** (qué se mapeó y a dónde) y pedí
+  confirmación antes de archivar/mover los originales.
+
 ## 2. Fusioná los contratos (lo delicado)
 Buscá archivos `*.harness` que dejó el installer (no se pisó nada):
 - **`CLAUDE.md.harness` / `AGENTS.md.harness`**: si existen, el proyecto YA tenía los

@@ -37,6 +37,22 @@ echo "Instalando harness"
 echo "  origen:  $SRC"
 echo "  destino: $TGT"
 
+# ---- Snapshot de estado/harness PREVIO (antes de copiar nada; solo se reporta) ----
+# Detecta datos que un harness anterior pudo dejar, para que /adopt los MIGRE sin
+# perder nada. install.sh nunca pisa estos archivos (son copy-if-absent/narrative).
+PRE_NOTES=()
+[ -e "$TGT/feature_list.json" ] && PRE_NOTES+=("feature_list.json ya poblado → se conserva; /adopt reconcilia/migra su contenido")
+[ -s "$TGT/progress/current.md" ] && PRE_NOTES+=("progress/current.md con contenido → se conserva")
+[ -s "$TGT/progress/history.md" ] && PRE_NOTES+=("progress/history.md con contenido → se conserva")
+[ -e "$TGT/.harness/config.json" ] && PRE_NOTES+=(".harness/config.json ya existe → se conserva (¿upgrade del mismo harness?)")
+if find "$TGT/specs" -mindepth 1 -maxdepth 1 -type d 2>/dev/null | grep -qv '/_TEMPLATE$'; then
+  PRE_NOTES+=("specs/ con specs previas → se conservan; /adopt las mapea a specs/<id>/")
+fi
+# Marcadores de OTROS harnesses (heurística; no exhaustiva)
+for m in .sdd tasks.md TASKS.md ROADMAP.md .agent .agents.json sdd.config.json harness.json; do
+  [ -e "$TGT/$m" ] && PRE_NOTES+=("'$m' detectado → posible harness/estado previo; /adopt lo revisa y migra")
+done
+
 # ---- Helpers ----
 # Copia harness-owned (crea dir, sobreescribe el archivo: es del harness).
 copy_owned() { # <relpath>
@@ -72,7 +88,7 @@ copy_owned ".harness/bin"
 copy_owned ".harness/profiles"
 copy_owned ".harness/config.schema.json"
 copy_owned "specs/_TEMPLATE"
-copy_owned "CHECKPOINTS.md"
+copy_narrative "CHECKPOINTS.md"   # narrativo: un harness previo puede tener el suyo
 
 # ---- Datos del usuario (crear solo si faltan) ----
 sec "Estado del proyecto (no se pisa)"
@@ -151,6 +167,11 @@ sec "Listo"
 echo "  Próximos pasos:"
 echo "   1. Abrí Claude Code en el proyecto y APROBÁ los hooks cuando lo pida."
 echo "   2. Corré  /adopt  para fusionar contratos, detectar stack/tests y verificar."
+if [ "${#PRE_NOTES[@]}" -gt 0 ]; then
+  echo
+  warn "Estado/harness PREVIO detectado (conservado, sin pisar — /adopt lo migra):"
+  for n in "${PRE_NOTES[@]}"; do echo "     - $n"; done
+fi
 if [ "${#TOMERGE[@]}" -gt 0 ]; then
   echo
   warn "Archivos que requieren merge manual o vía /adopt:"
