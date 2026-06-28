@@ -36,6 +36,13 @@ Averiguá, en este orden, lo mínimo para configurar:
     Ver `docs/agent-browser.md`. Es un aviso obligatorio en todo proyecto nuevo web.
 - Si NO es web, recordá que la skill `web-work` queda inactiva (no molesta).
 
+## 3b. Indicador visual del rate limit (statusline)
+El statusline es el indicador visual del 5h **y** la fuente sin red del harness.
+- Comprobá si el usuario ya tiene uno: `jq -r '.statusLine.command // empty' ~/.claude/settings.json`.
+- **Ofrecé instalarlo** (pedí confirmación, toca config global): `bash .harness/bin/setup-statusline.sh`.
+  Es no-destructivo: si ya tiene statusLine no lo pisa, solo le da el snippet para
+  cachear el rate limit. Ver `docs/visual-indicator.md`.
+
 ## 4. Cerrá
 - Corré `bash init.sh` y mostrá el resultado.
 - Resumí lo configurado y sugerí el próximo paso: `/spec <primera-feature>`.

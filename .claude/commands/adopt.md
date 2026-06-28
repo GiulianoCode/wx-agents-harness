@@ -57,6 +57,12 @@ Buscá archivos `*.harness` que dejó el installer (no se pisó nada):
 Chequeá `agent-browser --version`. Si falta, **avisá que hay que instalarlo** y ofrecé
 `npm install -g agent-browser && agent-browser install` (ver `docs/agent-browser.md`).
 
+## 4b. Indicador visual del rate limit (statusline)
+Es la fuente sin red del harness + el indicador visual del 5h. Comprobá si el usuario
+ya tiene statusLine (`jq -r '.statusLine.command // empty' ~/.claude/settings.json`) y
+**ofrecé** (pedí confirmación, toca config global): `bash .harness/bin/setup-statusline.sh`
+(no-destructivo; ver `docs/visual-indicator.md`).
+
 ## 5. Verificá y cerrá
 - Corré `bash init.sh` (o `init.harness.sh` si hubo colisión) y mostrá el resultado.
   Ajustá `project.verify_cmd` hasta que los tests del proyecto pasen por el harness.

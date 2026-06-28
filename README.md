@@ -115,9 +115,11 @@ en [`docs/rate-limit-handoff.md`](docs/rate-limit-handoff.md).
 
 - **Claude Code** ≥ 2.1.x (hooks `SessionStart`/`UserPromptSubmit`/`PostToolUse`).
 - **jq** y **curl** (`sudo pacman -S --needed jq curl` / `apt install jq curl`).
-- Un **statusline** que exponga el rate limit de 5h en `~/.claude/statusline-command.sh`
-  con `refreshInterval: 60` (fuente sin red del uso). Sin él, cae a la API (funciona,
-  gasta una request).
+- Un **statusline** que cachee el rate limit de 5h (fuente sin red del harness **y**
+  tu indicador visual). **Viene incluido**: el agente lo instala en `/onboard` /
+  `/adopt`, o corrés `bash .harness/bin/setup-statusline.sh` (no pisa el tuyo si ya
+  tenés). Sin statusline, cae a la API (funciona, gasta una request). Ver
+  [`docs/visual-indicator.md`](docs/visual-indicator.md).
 - **node/npm** para agent-browser (opcional según perfil).
 - **Codex** (opcional): `codex login` para que `usage-codex.sh` funcione.
 
@@ -130,7 +132,7 @@ specs/             specs SDD por feature (+ _TEMPLATE)
 progress/          current.md (handoff vivo) + history.md
 feature_list.json  scope · init.sh verificación · AGENTS.md/CLAUDE.md contratos
 docs/              architecture · conventions · specs · verification ·
-                   rate-limit-handoff · agent-browser
+                   rate-limit-handoff · agent-browser · visual-indicator
 install.sh         instalador merge-aware · bootstrap.sh arranque en un comando
 ```
 
