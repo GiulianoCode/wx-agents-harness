@@ -18,20 +18,28 @@ adaptable a otros tipos vía onboarding guiado.
 
 ## Cómo usarlo
 
-### Opción más simple: que el agente lo haga solo (un mensaje)
-Creá una carpeta, abrí Claude Code adentro y pegá:
+### ✨ Arranque recomendado (un solo prompt — hace casi todo)
+Creá la carpeta del proyecto (vacía **o** con tu código ya existente), abrí Claude
+Code adentro y pegá este prompt, reemplazando la URL:
 
-> **Configurá el harness de este proyecto basándote en este repo:**
-> `https://github.com/GiulianoCode/wx-harness-template`
+> Instalá y configurá el harness de este proyecto a partir de este repo:
+> `<URL-del-repo-del-template>`
+>
+> 1. Cloná ese repo con git a una carpeta temporal (si es una ruta local, copialo).
+> 2. Leé su `README.md`, sección **"Para el agente"**, y seguila al pie de la letra.
+> 3. Corré su `install.sh` apuntando a ESTE proyecto.
+> 4. Según el estado de este proyecto, instalá del modo correcto: si está vacío,
+>    seguí `.claude/commands/onboard.md`; si ya tiene código (o un harness previo),
+>    seguí `.claude/commands/adopt.md`, **migrando sin perder datos**.
+> 5. Verificá con `bash init.sh` y decime que apruebe los hooks al reabrir.
 
-El agente clona el template, corre `install.sh`, y **decide solo el camino**: si la
-carpeta está vacía hace el onboarding (`/onboard`), si ya hay código adapta/migra
-(`/adopt`) sin perder nada. (Ver "Para el agente" al final.)
+El agente solo necesita saber **clonar con git** (lo típico). Él detecta si tiene que
+**crear desde cero** o **adaptar/migrar** lo existente, y sigue los pasos detallados de
+la sección [Para el agente](#para-el-agente-setup-automático).
 
-O en una línea de terminal, sin chat:
-```bash
-curl -fsSL https://raw.githubusercontent.com/GiulianoCode/wx-harness-template/main/bootstrap.sh | bash
-```
+> La URL puede ser un repo de GitHub, cualquier URL git, o **una ruta local** al
+> template mientras no esté publicado. Sin chat, también vale:
+> `bash <ruta-al-template>/bootstrap.sh <ruta-al-proyecto>`.
 
 ### Proyecto nuevo
 1. **Cloná/copiá** este template a un proyecto nuevo.
