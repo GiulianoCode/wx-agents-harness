@@ -1,0 +1,13 @@
+{
+  "_comment": "Scope del proyecto. UNA feature in_progress a la vez. Estados: pending → spec_ready → in_progress → done. Cada feature 'spec_ready'+ debe tener specs/<id>/.",
+  "active": null,
+  "features": [
+    {
+      "id": "example-feature",
+      "title": "Feature de ejemplo (borrar tras onboarding)",
+      "status": "pending",
+      "spec_dir": "specs/example-feature",
+      "notes": "Plantilla. Reemplazá con las features reales de tu proyecto (las define /onboard o vos a mano)."
+    }
+  ]
+}

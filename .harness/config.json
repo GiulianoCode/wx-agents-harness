@@ -1,0 +1,31 @@
+{
+  "$schema": "./config.schema.json",
+  "harness_version": "0.1.0",
+  "profile": "saas-web",
+  "project": {
+    "name": "",
+    "description": "",
+    "stack": [],
+    "onboarded": false
+  },
+  "ratelimit": {
+    "source": "statusline-cache",
+    "cache_path": "~/.cache/claude/ratelimit.json",
+    "cache_max_age_seconds": 180,
+    "thresholds": {
+      "warn": 75,
+      "danger": 85,
+      "hard": 94
+    },
+    "throttle_seconds": 75
+  },
+  "handoff": {
+    "mode": "pause-and-prompt-codex",
+    "path": "progress/current.md",
+    "history": "progress/history.md"
+  },
+  "agent_browser": {
+    "enabled": true,
+    "mode": "cli"
+  }
+}

@@ -1,0 +1,13 @@
+{
+  "id": "cli",
+  "title": "Herramienta CLI",
+  "description": "Aplicación de línea de comandos.",
+  "agent_browser": false,
+  "skills": [],
+  "suggested_stack": ["Rust / Go / Python / Node"],
+  "verify_cmd_hint": "cargo test  ·  go test ./...  ·  pytest -q",
+  "starter_features": [
+    { "id": "cli-skeleton", "title": "Parser de args y comando base" }
+  ],
+  "notes": "Verificación por tests + ejecución del binario con casos reales."
+}

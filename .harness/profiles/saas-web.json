@@ -1,0 +1,15 @@
+{
+  "id": "saas-web",
+  "title": "SaaS web app",
+  "description": "App web con frontend + backend, auth, base de datos. El caso por defecto.",
+  "agent_browser": true,
+  "skills": ["web-work"],
+  "suggested_stack": ["Next.js / React", "TypeScript", "Postgres", "Tailwind"],
+  "verify_cmd_hint": "npm run test && npm run lint && npm run build",
+  "starter_features": [
+    { "id": "auth", "title": "Autenticación de usuarios (signup/login/logout)" },
+    { "id": "billing", "title": "Suscripciones / billing" },
+    { "id": "dashboard", "title": "Dashboard principal del usuario" }
+  ],
+  "notes": "Verificá las features de UI en browser real con agent-browser (skill web-work)."
+}

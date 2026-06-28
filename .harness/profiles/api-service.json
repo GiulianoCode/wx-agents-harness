@@ -1,0 +1,14 @@
+{
+  "id": "api-service",
+  "title": "API / servicio backend",
+  "description": "Servicio sin UI: API REST/GraphQL, workers, integraciones.",
+  "agent_browser": false,
+  "skills": [],
+  "suggested_stack": ["Node/TypeScript o Python", "Postgres/Redis", "OpenAPI"],
+  "verify_cmd_hint": "npm test  ·  o: pytest -q",
+  "starter_features": [
+    { "id": "health", "title": "Health checks y observabilidad" },
+    { "id": "core-endpoints", "title": "Endpoints núcleo del dominio" }
+  ],
+  "notes": "Verificación por tests de integración y contract tests; agent-browser deshabilitado."
+}

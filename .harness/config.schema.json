@@ -1,0 +1,52 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "wx-harness config",
+  "type": "object",
+  "properties": {
+    "harness_version": { "type": "string" },
+    "profile": { "type": "string", "enum": ["saas-web", "api-service", "cli", "library"] },
+    "project": {
+      "type": "object",
+      "properties": {
+        "name": { "type": "string" },
+        "description": { "type": "string" },
+        "stack": { "type": "array", "items": { "type": "string" } },
+        "verify_cmd": { "type": "string" },
+        "onboarded": { "type": "boolean" }
+      }
+    },
+    "ratelimit": {
+      "type": "object",
+      "properties": {
+        "source": { "type": "string", "enum": ["statusline-cache", "api"] },
+        "cache_path": { "type": "string" },
+        "cache_max_age_seconds": { "type": "integer", "minimum": 0 },
+        "thresholds": {
+          "type": "object",
+          "properties": {
+            "warn": { "type": "integer", "minimum": 0, "maximum": 100 },
+            "danger": { "type": "integer", "minimum": 0, "maximum": 100 },
+            "hard": { "type": "integer", "minimum": 0, "maximum": 100 }
+          },
+          "required": ["warn", "danger", "hard"]
+        },
+        "throttle_seconds": { "type": "integer", "minimum": 0 }
+      }
+    },
+    "handoff": {
+      "type": "object",
+      "properties": {
+        "mode": { "type": "string", "enum": ["pause-and-prompt-codex", "pause-only", "auto-continue-codex"] },
+        "path": { "type": "string" },
+        "history": { "type": "string" }
+      }
+    },
+    "agent_browser": {
+      "type": "object",
+      "properties": {
+        "enabled": { "type": "boolean" },
+        "mode": { "type": "string", "enum": ["cli", "mcp"] }
+      }
+    }
+  }
+}

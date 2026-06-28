@@ -1,0 +1,13 @@
+{
+  "id": "library",
+  "title": "Librería / paquete",
+  "description": "Paquete reutilizable publicable (npm, PyPI, crates, etc.).",
+  "agent_browser": false,
+  "skills": [],
+  "suggested_stack": ["TypeScript / Python / Rust"],
+  "verify_cmd_hint": "npm test && npm run build  ·  pytest -q  ·  cargo test",
+  "starter_features": [
+    { "id": "public-api", "title": "Diseño de la API pública" }
+  ],
+  "notes": "Foco en API pública estable, docs y tests; sin UI."
+}
