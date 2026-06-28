@@ -18,6 +18,21 @@ adaptable a otros tipos vía onboarding guiado.
 
 ## Cómo usarlo
 
+### Opción más simple: que el agente lo haga solo (un mensaje)
+Creá una carpeta, abrí Claude Code adentro y pegá:
+
+> **Configurá el harness de este proyecto basándote en este repo:**
+> `https://github.com/GiulianoCode/wx-harness-template`
+
+El agente clona el template, corre `install.sh`, y **decide solo el camino**: si la
+carpeta está vacía hace el onboarding (`/onboard`), si ya hay código adapta/migra
+(`/adopt`) sin perder nada. (Ver "Para el agente" al final.)
+
+O en una línea de terminal, sin chat:
+```bash
+curl -fsSL https://raw.githubusercontent.com/GiulianoCode/wx-harness-template/main/bootstrap.sh | bash
+```
+
 ### Proyecto nuevo
 1. **Cloná/copiá** este template a un proyecto nuevo.
 2. Abrí Claude Code en la carpeta y corré **`/onboard`**. Te entrevista (tipo de
@@ -72,3 +87,25 @@ docs/              architecture, conventions, specs, verification,
 ```
 
 Verificá la salud del harness en cualquier momento: `bash init.sh`.
+
+---
+
+## Para el agente (setup automático)
+
+Si te pidieron *"configurar/instalar este harness en este proyecto"* a partir de
+este repo, seguí estos pasos exactamente:
+
+1. **Traé el template** a una carpeta temporal:
+   `git clone --depth 1 <URL-de-este-repo> /tmp/harness-template`
+2. **Instalá** sobre el proyecto actual (no pisa nada, es idempotente):
+   `bash /tmp/harness-template/install.sh "$PWD"`
+3. **Leé el reporte** del installer y **elegí el camino**:
+   - Carpeta vacía / sin código → seguí los pasos de `.claude/commands/onboard.md`.
+   - Ya hay código (o un harness/estado previo) → seguí `.claude/commands/adopt.md`
+     (incluye migración sin pérdida de un harness anterior).
+   > Los slash recién instalados **no** están activos en esta sesión: **leé esos
+   > `.md` y ejecutá sus pasos directamente** (no esperes que `/onboard` o `/adopt`
+   > funcionen como comando hasta reabrir Claude Code).
+4. **Regla de oro**: cero pérdida de datos. `install.sh` no borra nada; lo previo se
+   conserva o se archiva en `.harness/migrated/`. Verificá al final con `bash init.sh`.
+5. Avisá al usuario que **apruebe los hooks** al reabrir Claude Code (se activan ahí).
