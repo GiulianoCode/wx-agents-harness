@@ -45,11 +45,17 @@ zone_of() { # pct warn danger hard
 rank() { case "$1" in ok)echo 0;; warn)echo 1;; danger)echo 2;; hard)echo 3;; *)echo -1;; esac; }
 rmin_of() { local r=$1; { [ -n "$r" ] && [ "$r" != "null" ] && [ "$r" -gt 0 ] 2>/dev/null; } \
   && { local m=$(( (r-now)/60 )); [ "$m" -lt 0 ] && m=0; echo "$m"; } || echo null; }
+# Una ventana cuyo resets_at ya pasó "rodó": el % cacheado es del período viejo y no
+# es de fiar (la ventana real arranca casi en 0). No alarmar con ese dato.
+rolled_over() { local r=$1; [ -n "$r" ] && [ "$r" != "null" ] && [ "$r" -le "$now" ] 2>/dev/null; }
 
 emit() { # five_pct five_reset week_pct week_reset stale source
   local fp="$1" fr="$2" wp="$3" wr="$4" stale="$5" source="$6"
   local fz wz frm wrm bind bz bp brm
   fz=$(zone_of "$fp" "$W5" "$D5" "$H5"); wz=$(zone_of "$wp" "$WW" "$DW" "$HW")
+  # Si la ventana ya rodó (resets_at en el pasado), su % es viejo → no alarmar.
+  rolled_over "$fr" && fz=ok
+  rolled_over "$wr" && wz=ok
   frm=$(rmin_of "$fr"); wrm=$(rmin_of "$wr")
   # binding = peor zona; en empate gana la semanal (consecuencia más dura)
   if [ -n "$wp" ] && [ "$(rank "$wz")" -ge "$(rank "$fz")" ]; then
