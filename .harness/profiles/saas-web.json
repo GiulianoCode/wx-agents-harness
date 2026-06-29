@@ -1,7 +1,7 @@
 {
   "id": "saas-web",
-  "title": "App web (SaaS o personal)",
-  "description": "Cualquier app con interfaz web: un SaaS, o una herramienta web personal (p.ej. un 'life OS' de finanzas/hábitos). El caso por defecto para todo lo web.",
+  "title": "App web",
+  "description": "Cualquier aplicación con interfaz web (frontend + backend). El caso por defecto para todo lo que se use en el browser.",
   "agent_browser": true,
   "skills": ["web-work"],
   "suggested_stack": ["Next.js / React", "TypeScript", "Postgres", "Tailwind"],

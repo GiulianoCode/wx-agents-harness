@@ -10,13 +10,11 @@ encajones al usuario en un menú.**
 ## 1. Entrevistá CONVERSANDO (no con menús rígidos)
 Hacelo como una charla, una pregunta a la vez, en texto:
 1. **Pedile que describa el proyecto con sus palabras** ("¿qué es y qué hace?").
-   No le presentes una lista cerrada de tipos. Ejemplos válidos: un SaaS, una
-   herramienta **web personal** (p.ej. un "life OS" para finanzas/hábitos), una API,
-   un CLI, una librería, un bot, lo que sea.
+   No le presentes una lista cerrada de tipos. Puede ser cualquier cosa: una app
+   web, una API, un CLI, una librería, un bot, etc.
 2. **Inferí vos el perfil más cercano** de `.harness/profiles/` y **proponéselo para
    confirmar**, explicando por qué. Los perfiles son **defaults, no cajas**:
-   - Cualquier cosa con interfaz web (SaaS **o** herramienta personal) → `saas-web`
-     (activa agent-browser). Es el caso más común.
+   - Cualquier cosa con interfaz web → `saas-web` (activa agent-browser). El caso más común.
    - Servicio sin UI → `api-service`. Comando de terminal → `cli`. Paquete → `library`.
    - Si no encaja limpio, **elegí el más cercano y adaptá libremente** la config (no
      fuerces un perfil que no corresponde, como `cli` para algo web).
