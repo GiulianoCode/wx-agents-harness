@@ -33,18 +33,28 @@ del harness.) Sin ese statusline, el sistema cae siempre al fallback de API
 (funciona, pero gasta red).
 
 Comando único de consulta: `bash .harness/bin/usage.sh` (`--human` para legible).
-Salida: `{pct, resets_at, resets_in_min, zone, stale, source}`.
+Salida: `{zone, window, pct, resets_in_min, five_hour:{…}, seven_day:{…}, stale, source}`.
+El top-level (`zone`/`window`/`pct`) refleja la ventana **binding** = la peor de las dos.
+
+## Dos ventanas: 5h y SEMANAL
+
+El harness vigila **dos** cuotas y actúa según la peor:
+- **5h** (`five_hour`) — la ventana corta; se recupera en horas.
+- **Semanal** (`seven_day`) — **más estricta**: si se agota, Claude queda sin cuota por
+  **días**. Por eso, en zona semanal, dejar el handoff y pasar a Codex es aún más crítico
+  (esperar no alcanza). Los nudges lo dicen explícitamente.
 
 ## Umbrales y zonas
 
-Definidos en `.harness/config.json → ratelimit.thresholds`:
+Definidos en `.harness/config.json` (`ratelimit.thresholds` para 5h,
+`ratelimit.weekly_thresholds` para semanal):
 
-| Zona | % 5h | Comportamiento inducido |
-|---|---|---|
-| `ok` | <75 | Normal. Silencio. |
-| `warn` | ≥75 | Asegurar que `progress/current.md` exista para la tarea activa. |
-| `danger` | ≥85 | Pasos chicos, sin refactors grandes; **refrescar el handoff tras cada paso atómico.** |
-| `hard` | ≥94 | Terminar SOLO el paso actual, confirmar handoff completo, **parar** y emitir el prompt de continuación para Codex. |
+| Zona | % 5h | % semanal | Comportamiento inducido |
+|---|---|---|---|
+| `ok` | <75 | <80 | Normal. Silencio. |
+| `warn` | ≥75 | ≥80 | Asegurar que `progress/current.md` exista para la tarea activa. |
+| `danger` | ≥85 | ≥90 | Pasos chicos, sin refactors grandes; **refrescar el handoff tras cada paso atómico.** |
+| `hard` | ≥94 | ≥96 | Terminar SOLO el paso actual, confirmar handoff completo, **parar** y emitir el prompt de continuación para Codex. |
 
 ## Cómo "sabe cuándo" (sin depender de su disciplina): hooks
 

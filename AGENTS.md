@@ -59,14 +59,16 @@ Detalle del proceso: `docs/specs.md`. Criterios de correctitud: `CHECKPOINTS.md`
 
 ## Rate limit y handoff
 
-El harness te avisa cuándo te acercás al límite de 5h. Comportamiento esperado:
+El harness vigila **dos** cuotas y actúa según la peor: la de **5h** y la **SEMANAL**.
+La semanal es más estricta: si se agota, Claude queda sin cuota por **días** → ahí el
+handoff y el pase a Codex son aún más críticos. Comportamiento esperado:
 
-| Zona | % 5h | Qué hacer |
-|---|---|---|
-| ok | <75 | Normal. |
-| warn | ≥75 | Asegurá que `progress/current.md` exista para la tarea activa. |
-| danger | ≥85 | Pasos chicos; refrescá el handoff **después de cada paso atómico**. |
-| hard | ≥94 | Terminá solo el paso actual, dejá el handoff completo, **pará** y entregá el prompt de continuación. |
+| Zona | % 5h | % semanal | Qué hacer |
+|---|---|---|---|
+| ok | <75 | <80 | Normal. |
+| warn | ≥75 | ≥80 | Asegurá que `progress/current.md` exista para la tarea activa. |
+| danger | ≥85 | ≥90 | Pasos chicos; refrescá el handoff **después de cada paso atómico**. |
+| hard | ≥94 | ≥96 | Terminá solo el paso actual, dejá el handoff completo, **pará** y entregá el prompt de continuación. |
 
 - **Consultar el uso:**
   - Claude: automático (hooks). Manual: `bash .harness/bin/usage.sh --human`.

@@ -49,10 +49,11 @@ fi
 if [ "$notify" = "1" ]; then
   printf '%s %s\n' "$zone" "$now" >"$STATE" 2>/dev/null
   pct=$(usage_field "$j" '.pct'); rmin=$(usage_field "$j" '.resets_in_min')
+  window=$(usage_field "$j" '.window')
   # Red de seguridad mecánica: en danger/hard, snapshot a disco por script
   # (no depende de que el agente escriba el handoff).
   [ "$rank" -ge 2 ] && write_snapshot "$pct" "$zone"
-  txt=$(nudge_text "$zone" "$pct" "$rmin")
+  txt=$(nudge_text "$zone" "$pct" "$rmin" "$window")
   [ -n "$txt" ] && emit_context "PostToolUse" "$txt"
 else
   printf '%s %s\n' "$zone" "$last_ts" >"$STATE" 2>/dev/null

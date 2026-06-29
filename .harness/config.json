@@ -17,6 +17,11 @@
       "danger": 85,
       "hard": 94
     },
+    "weekly_thresholds": {
+      "warn": 80,
+      "danger": 90,
+      "hard": 96
+    },
     "throttle_seconds": 75
   },
   "handoff": {

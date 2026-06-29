@@ -30,6 +30,15 @@
           },
           "required": ["warn", "danger", "hard"]
         },
+        "weekly_thresholds": {
+          "type": "object",
+          "properties": {
+            "warn": { "type": "integer", "minimum": 0, "maximum": 100 },
+            "danger": { "type": "integer", "minimum": 0, "maximum": 100 },
+            "hard": { "type": "integer", "minimum": 0, "maximum": 100 }
+          },
+          "required": ["warn", "danger", "hard"]
+        },
         "throttle_seconds": { "type": "integer", "minimum": 0 }
       }
     },

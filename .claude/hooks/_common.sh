@@ -32,17 +32,28 @@ emit_context() { # args: <hookEventName> <text>
     '{hookSpecificOutput:{hookEventName:$ev, additionalContext:$ctx}}'
 }
 
-# Texto del nudge según zona. args: <zone> <pct> <resets_in_min>
+# Texto del nudge según zona y ventana. args: <zone> <pct> <resets_in_min> <window>
+# window ∈ five_hour | seven_day. La semanal es más estricta: agotarla = Claude
+# sin cuota por DÍAS, no horas → el handoff a Codex pesa más.
 nudge_text() {
-  local zone="$1" pct="$2" rmin="$3" reset_lbl=""
-  [ -n "$rmin" ] && [ "$rmin" != "null" ] && reset_lbl=" (reset 5h en ${rmin} min)"
+  local zone="$1" pct="$2" rmin="$3" window="${4:-five_hour}" wlabel reset_lbl="" conseq=""
+  if [ "$window" = "seven_day" ]; then
+    wlabel="cuota SEMANAL"
+    conseq=' ⚠ OJO: es la ventana semanal — si se agota, Claude queda sin cuota por DÍAS (no se recupera en horas), así que dejar el handoff y pasar a Codex es CRÍTICO.'
+    if [ -n "$rmin" ] && [ "$rmin" != "null" ]; then
+      reset_lbl=" (reset semanal en ~$(( rmin / 1440 ))d $(( (rmin % 1440) / 60 ))h)"
+    fi
+  else
+    wlabel="rate limit de 5h"
+    [ -n "$rmin" ] && [ "$rmin" != "null" ] && reset_lbl=" (reset 5h en ${rmin} min)"
+  fi
   case "$zone" in
     warn)
-      printf '⚠ Rate limit de 5h al %s%%%s. Asegurate de que `progress/current.md` exista y refleje la tarea activa: es la base del handoff. Trabajá normal, pero mantené ese archivo vivo.' "$pct" "$reset_lbl" ;;
+      printf '⚠ %s al %s%%%s.%s Asegurate de que `progress/current.md` exista y refleje la tarea activa: es la base del handoff. Trabajá normal, pero mantené ese archivo vivo.' "$wlabel" "$pct" "$reset_lbl" "$conseq" ;;
     danger)
-      printf '🟠 Rate limit de 5h al %s%% — ZONA DE PELIGRO%s. A partir de ahora: (1) trabajá en pasos chicos y atómicos, nada de refactors grandes; (2) DESPUÉS de cada paso atómico, escribí/actualizá vos mismo el archivo `progress/current.md` con estado + próximos pasos (es el handoff; hacelo directo con tus tools de edición, no esperes que nadie dispare un comando). El objetivo es que el handoff esté siempre completo en disco por si el límite corta de golpe.' "$pct" "$reset_lbl" ;;
+      printf '🟠 %s al %s%% — ZONA DE PELIGRO%s.%s A partir de ahora: (1) trabajá en pasos chicos y atómicos, nada de refactors grandes; (2) DESPUÉS de cada paso atómico, escribí/actualizá vos mismo el archivo `progress/current.md` con estado + próximos pasos (es el handoff; hacelo directo con tus tools de edición, no esperes que nadie dispare un comando). El objetivo es que el handoff esté siempre completo en disco por si el límite corta de golpe.' "$wlabel" "$pct" "$reset_lbl" "$conseq" ;;
     hard)
-      printf '🔴 Rate limit de 5h al %s%% — CRÍTICO%s. PARÁ acá: terminá SOLO el paso atómico actual y, vos mismo, dejá `progress/current.md` completo (estado + próximos pasos + un prompt de continuación para Codex). Escribí ese archivo directamente con tus tools; NO hace falta ningún comando. Avisale al usuario que pase a Codex con ese prompt y NO empieces trabajo nuevo.' "$pct" "$reset_lbl" ;;
+      printf '🔴 %s al %s%% — CRÍTICO%s.%s PARÁ acá: terminá SOLO el paso atómico actual y, vos mismo, dejá `progress/current.md` completo (estado + próximos pasos + un prompt de continuación para Codex). Escribí ese archivo directamente con tus tools; NO hace falta ningún comando. Avisale al usuario que pase a Codex con ese prompt y NO empieces trabajo nuevo.' "$wlabel" "$pct" "$reset_lbl" "$conseq" ;;
     *) printf '' ;;
   esac
 }

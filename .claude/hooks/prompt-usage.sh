@@ -15,6 +15,7 @@ zone=$(usage_field "$j" '.zone')
 
 pct=$(usage_field "$j" '.pct')
 rmin=$(usage_field "$j" '.resets_in_min')
-txt=$(nudge_text "$zone" "$pct" "$rmin")
+window=$(usage_field "$j" '.window')
+txt=$(nudge_text "$zone" "$pct" "$rmin" "$window")
 [ -n "$txt" ] && emit_context "UserPromptSubmit" "$txt"
 exit 0
