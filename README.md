@@ -82,6 +82,25 @@ abrí Claude Code → aprobá los hooks → corré **`/adopt`** (fusiona contrat
 tu stack/tests y **migra cualquier harness anterior sin perder datos**).
 </details>
 
+## 🔄 Actualizar el harness
+
+El harness es **actualizable**: `install.sh` es idempotente. Re-correrlo trae la última
+maquinaria (hooks, commands, subagentes, docs, statusline) y **conserva tus datos**
+(`.harness/config.json`, `feature_list.json`, `progress/`, tu `CLAUDE.md`/`AGENTS.md`).
+
+Prompt recomendado (pegá en Claude Code dentro del proyecto):
+
+> Actualizá el harness de este proyecto a la última versión de este repo:
+> `https://github.com/GiulianoCode/wx-agents-harness`
+>
+> 1. Cloná el repo con git a una carpeta temporal.
+> 2. Corré su `install.sh` apuntando a ESTE proyecto (es idempotente, no pisa mis datos).
+> 3. Si quedan archivos `*.harness` nuevos (contratos/docs que cambiaron), comparámelos
+>    con los míos y proponé qué integrar; no pises nada sin avisar.
+> 4. Resumime qué cambió y reabrí para que apruebe hooks nuevos si los hubiera.
+
+O directo en terminal: `bash /ruta/al/wx-agents-harness/install.sh /ruta/a/mi-proyecto`.
+
 ## ⛽ La joya: rate-limit + handoff
 
 > El problema no es predecir el corte del 100% — es **no perder trabajo cuando ocurre**.
